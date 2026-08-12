@@ -54,16 +54,22 @@ export function createPrivacyView() {
       <h1 style="font-size:2rem;font-weight:800;margin-bottom:0.5rem">Privacy Policy</h1>
       <p style="color:var(--color-text-secondary);margin-bottom:2rem">Last updated: August 2026</p>
       <div class="legal-content">
-        <h2>Data Collection</h2>
-        <p>TypeForge does not collect, store, transmit, or sell any personal data. No user account is required. No tracking cookies are set. No analytics pixels are used.</p>
-        <h2>Local Storage</h2>
-        <p>TypeForge stores all progress data (typing test history, WPM records, unlocked levels, and settings) locally in your browser using the Web Storage API (localStorage) and IndexedDB. This data exists only on your device and is not synchronized to any server.</p>
-        <h2>Third-Party Services</h2>
-        <p>TypeForge loads fonts from Google Fonts. Google's Font API may log HTTP requests per Google's own privacy policy. No other third-party scripts, APIs, or embeds are loaded.</p>
-        <h2>Cookies</h2>
-        <p>TypeForge does not set any cookies. We do not use session cookies, tracking cookies, or advertising cookies of any kind.</p>
-        <h2>Contact</h2>
-        <p>For privacy-related inquiries, contact us at <a href="mailto:hello@typeforge.dev">hello@typeforge.dev</a>.</p>
+        <h2>Data Collection & Storage</h2>
+        <p>TypeForge values your privacy. No user registration or account creation is required to use any core feature of our platform. All user progress data (typing test history, WPM records, unlocked programming levels, and custom settings) is stored locally on your device using the browser Web Storage API (localStorage). This data is strictly private to your browser session and is never uploaded to external servers.</p>
+
+        <h2>Advertising & Third-Party Vendors</h2>
+        <p>TypeForge displays advertisements served by third-party vendors, including Google AdSense. Third-party vendors use cookies to serve ads based on a user's prior visits to TypeForge or other websites on the Internet.</p>
+        <p>Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to our sites and/or other sites on the Internet.</p>
+        <p>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>. Alternatively, users can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>.</p>
+
+        <h2>Log Files & Third-Party Services</h2>
+        <p>TypeForge loads typography assets from Google Fonts. Like most websites, third-party network providers (such as Google Fonts or Content Delivery Networks) may collect IP addresses and standard HTTP request headers as part of routine web asset requests, governed by their respective privacy policies.</p>
+
+        <h2>Cookies & Consent</h2>
+        <p>TypeForge itself does not set first-party tracking cookies. Any cookies present on the domain are placed by approved advertising networks (such as Google AdSense) to manage ad delivery, prevent fraud, and measure advertising performance.</p>
+
+        <h2>Contact Information</h2>
+        <p>If you have any questions or concerns regarding this Privacy Policy, please contact us at <a href="mailto:hello@typeforge.dev">hello@typeforge.dev</a>.</p>
       </div>
     </div>
   `;

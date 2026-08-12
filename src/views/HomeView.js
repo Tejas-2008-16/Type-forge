@@ -41,17 +41,17 @@ export function createHomeView(router) {
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
           Live WPM Tracking
         </span>
-        <span style="color:var(--color-border)">·</span>
+        <span class="hero-stats-dot" style="color:var(--color-border)">·</span>
         <span class="hero-stat-item">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           Concept Explanations
         </span>
-        <span style="color:var(--color-border)">·</span>
+        <span class="hero-stats-dot" style="color:var(--color-border)">·</span>
         <span class="hero-stat-item">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           No Account Needed
         </span>
-        <span style="color:var(--color-border)">·</span>
+        <span class="hero-stats-dot" style="color:var(--color-border)">·</span>
         <span class="hero-stat-item">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"></polyline></svg>
           Forever Free

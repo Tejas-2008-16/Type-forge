@@ -54,47 +54,118 @@ app.appendChild(footer);
 
 // ── Route Definitions ──────────────────────────────────────────────────────
 router.routes = [
-  { pattern: "/", handler: () => createHomeView(router) },
+  {
+    pattern: "/",
+    title: "TypeForge — Type with purpose. Code with confidence.",
+    description: "Improve typing speed while learning real programming concepts and syntax across JavaScript, Python, HTML, CSS, C++, Java, and SQL.",
+    handler: () => createHomeView(router)
+  },
 
   // Text Typing (Mode A)
-  { pattern: "/typing-test", handler: () => createTypingTestView(router) },
-  { pattern: /^\/typing-test\/(?<lang>[^/]+)$/, handler: (p) => createTypingTestView(router, p.lang) },
+  {
+    pattern: "/typing-test",
+    title: "Typing Speed Test — TypeForge",
+    description: "Test and improve your typing speed (WPM) and accuracy with English words, tech terminology, Hindi, Marathi, and sentences.",
+    handler: () => createTypingTestView(router)
+  },
+  {
+    pattern: /^\/typing-test\/(?<lang>[^/]+)$/,
+    title: "Typing Practice — TypeForge",
+    description: "Practice touch typing in your selected language and domain on TypeForge.",
+    handler: (p) => createTypingTestView(router, p.lang)
+  },
 
   // Quote Typing (Mode B)
-  { pattern: "/quotes", handler: () => createQuotesView(router) },
+  {
+    pattern: "/quotes",
+    title: "Quote Typing Practice — TypeForge",
+    description: "Type inspiring tech, scientific, and philosophical quotes while improving touch typing speed and rhythm.",
+    handler: () => createQuotesView(router)
+  },
 
   // Code Typing (Mode C)
-  { pattern: "/code-typing", handler: () => createCodeTypingOverview(router) },
+  {
+    pattern: "/code-typing",
+    title: "Code Learning & Curriculum — TypeForge",
+    description: "Master 10 programming languages through structured typing challenges, code explanations, and capstone projects.",
+    handler: () => createCodeTypingOverview(router)
+  },
   {
     pattern: /^\/code-typing\/(?<lang>[a-z]+)$/,
+    title: "Code Curriculum Chapter Map — TypeForge",
+    description: "Explore structured programming chapters, code exercises, and capstone projects.",
     handler: (p) => createLevelMapView(router, p.lang)
   },
   {
     pattern: /^\/code-typing\/(?<lang>[a-z]+)\/level\/(?<level>\d+)\/challenge\/(?<challengeIdx>\d+)$/,
+    title: "Code Challenge Practice — TypeForge",
+    description: "Type actual code syntax, execute your solution in real-time, and read step-by-step code breakdowns.",
     handler: (p) => createCodeChallengeView(router, p.lang, p.level, p.challengeIdx)
   },
 
   // Progress dashboard
-  { pattern: "/progress", handler: () => createProgressView(router) },
+  {
+    pattern: "/progress",
+    title: "Your Typing & Coding Statistics — TypeForge",
+    description: "Track your average WPM, accuracy, completed code levels, personal records, and typing analytics.",
+    handler: () => createProgressView(router)
+  },
 
   // Articles
-  { pattern: "/articles", handler: () => createArticlesView(router) },
+  {
+    pattern: "/articles",
+    title: "Articles & Developer Guides — TypeForge",
+    description: "In-depth articles on developer productivity, touch typing mechanics, keyboard shortcuts, and programming best practices.",
+    handler: () => createArticlesView(router)
+  },
   {
     pattern: /^\/articles\/(?<slug>[^/]+)$/,
+    title: "Developer Article — TypeForge",
+    description: "Read developer guides and tutorials on TypeForge.",
     handler: (p) => createArticleDetailView(router, p.slug)
   },
 
   // Settings
-  { pattern: "/settings", handler: () => createSettingsView(router) },
+  {
+    pattern: "/settings",
+    title: "Settings & Customization — TypeForge",
+    description: "Customize your typing experience, sound effects, theme preference, and font display.",
+    handler: () => createSettingsView(router)
+  },
 
   // Legal & Trust
-  { pattern: "/about", handler: () => createAboutView() },
-  { pattern: "/contact", handler: () => createContactView() },
-  { pattern: "/privacy-policy", handler: () => createPrivacyView() },
-  { pattern: "/terms-of-service", handler: () => createTermsView() },
+  {
+    pattern: "/about",
+    title: "About TypeForge — Purpose-Driven Typing Education",
+    description: "Learn about TypeForge's mission to combine touch typing speed with real-world programming education.",
+    handler: () => createAboutView()
+  },
+  {
+    pattern: "/contact",
+    title: "Contact TypeForge Team",
+    description: "Get in touch with the TypeForge team for support, feedback, curriculum suggestions, or press inquiries.",
+    handler: () => createContactView()
+  },
+  {
+    pattern: "/privacy-policy",
+    title: "Privacy Policy — TypeForge",
+    description: "TypeForge's privacy policy outlining zero data tracking, local-only storage, and cookie disclosures.",
+    handler: () => createPrivacyView()
+  },
+  {
+    pattern: "/terms-of-service",
+    title: "Terms of Service — TypeForge",
+    description: "Terms and conditions of use for TypeForge educational software.",
+    handler: () => createTermsView()
+  },
 
   // 404 fallback
-  { pattern: "404", handler: () => createNotFoundView(router) }
+  {
+    pattern: "404",
+    title: "404 — Page Not Found | TypeForge",
+    description: "The requested page was not found.",
+    handler: () => createNotFoundView(router)
+  }
 ];
 
 // ── Handle SPA Navigation ──────────────────────────────────────────────────

@@ -84,7 +84,7 @@ export function createTypingWidget(options = {}) {
       <span class="blur-icon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
       </span>
-      <span class="blur-text">Click or press any key to begin</span>
+      <span class="blur-text">Tap or press any key to begin</span>
     </div>
   `;
 

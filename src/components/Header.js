@@ -38,6 +38,7 @@ export function createHeader(router) {
         </button>
       </div>
     </div>
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
   `;
 
   // Theme toggle
@@ -55,16 +56,40 @@ export function createHeader(router) {
   // Mobile menu toggle
   const mobileBtn = header.querySelector("#mobile-menu-btn");
   const navLinks = header.querySelector("#main-nav");
-  mobileBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("mobile-open");
+  const backdrop = header.querySelector("#mobile-nav-backdrop");
+
+  function closeMobileMenu() {
+    navLinks.classList.remove("mobile-open");
+    if (backdrop) backdrop.classList.remove("active");
+  }
+
+  function toggleMobileMenu() {
+    const isOpen = navLinks.classList.contains("mobile-open");
+    if (isOpen) {
+      closeMobileMenu();
+    } else {
+      navLinks.classList.add("mobile-open");
+      if (backdrop) backdrop.classList.add("active");
+    }
+  }
+
+  mobileBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleMobileMenu();
   });
+
+  if (backdrop) {
+    backdrop.addEventListener("click", () => {
+      closeMobileMenu();
+    });
+  }
 
   // Client-side navigation: intercept all [data-nav] links
   header.querySelectorAll("[data-nav]").forEach(link => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const href = link.getAttribute("href");
-      navLinks.classList.remove("mobile-open");
+      closeMobileMenu();
       router.navigate(href);
     });
   });

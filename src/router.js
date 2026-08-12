@@ -27,6 +27,12 @@ export class Router {
     const path = window.location.pathname;
     const matched = this._matchRoute(path);
 
+    // Close mobile nav drawer if open
+    const navLinks = document.querySelector("#main-nav");
+    const mobileBackdrop = document.querySelector("#mobile-nav-backdrop");
+    if (navLinks) navLinks.classList.remove("mobile-open");
+    if (mobileBackdrop) mobileBackdrop.classList.remove("active");
+
     if (matched) {
       const mainEl = document.querySelector("#main-view");
       if (mainEl) {
@@ -38,11 +44,25 @@ export class Router {
           mainEl.innerHTML = view;
         }
       }
+
+      // Update document title & SEO metadata if available
+      if (matched.title) {
+        document.title = matched.title;
+      }
+      if (matched.description) {
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute("content", matched.description);
+      }
+
       // Update active nav link
       document.querySelectorAll(".nav-link").forEach(link => {
         link.classList.remove("active");
-        if (link.dataset.path && path.startsWith(link.dataset.path)) {
-          link.classList.add("active");
+        if (link.dataset.path) {
+          if (link.dataset.path === "/" && path === "/") {
+            link.classList.add("active");
+          } else if (link.dataset.path !== "/" && path.startsWith(link.dataset.path)) {
+            link.classList.add("active");
+          }
         }
       });
     }
@@ -53,15 +73,15 @@ export class Router {
       if (route.pattern instanceof RegExp) {
         const match = path.match(route.pattern);
         if (match) {
-          return { handler: route.handler, params: match.groups || {} };
+          return { handler: route.handler, params: match.groups || {}, title: route.title, description: route.description };
         }
       } else if (route.pattern === path) {
-        return { handler: route.handler, params: {} };
+        return { handler: route.handler, params: {}, title: route.title, description: route.description };
       }
     }
     // Fallback to 404
     const notFoundRoute = this.routes.find(r => r.pattern === "404");
-    if (notFoundRoute) return { handler: notFoundRoute.handler, params: {} };
+    if (notFoundRoute) return { handler: notFoundRoute.handler, params: {}, title: "404 — Page Not Found | TypeForge", description: "The requested page was not found on TypeForge." };
     return null;
   }
 }
