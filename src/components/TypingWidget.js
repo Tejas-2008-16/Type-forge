@@ -72,8 +72,10 @@ export function createTypingWidget(options = {}) {
   hiddenInput.id = "hidden-input";
   hiddenInput.setAttribute("autocorrect", "off");
   hiddenInput.setAttribute("autocomplete", "off");
-  hiddenInput.setAttribute("autocapitalize", "off");
+  hiddenInput.setAttribute("autocapitalize", "none");
   hiddenInput.setAttribute("spellcheck", "false");
+  hiddenInput.setAttribute("inputmode", "text");
+  hiddenInput.setAttribute("data-gramm", "false");
 
   // Blur Focus Overlay
   const blurOverlay = document.createElement("div");
@@ -341,25 +343,104 @@ export function createTypingWidget(options = {}) {
     }
   });
 
-  hiddenInput.addEventListener("keydown", (e) => {
-    if (!engine) return;
+  // ─── Dual Event Handler (Desktop + Mobile Touch Keyboard Compatibility) ───
+  let ignoreNextInputEvent = false;
 
-    // Prevent default browser hotkeys (Find, search, etc.)
-    const allow = e.ctrlKey && (e.key === "c" || e.key === "x" || e.key === "z" || e.key === "y");
-    if (!allow) {
-      e.preventDefault();
+  hiddenInput.addEventListener("keydown", (e) => {
+    if (!engine || engine.status === "complete") return;
+
+    const key = e.key;
+
+    // Allow browser hotkeys (Ctrl+C, Ctrl+R, etc.)
+    if (e.ctrlKey || e.metaKey) {
+      return;
     }
 
-    if (e.ctrlKey || e.metaKey) {
-      if (e.key === "a" || e.key === "v") {
-        return;
+    // 1. Backspace Key
+    if (key === "Backspace") {
+      e.preventDefault();
+      engine.handleBackspace();
+      hiddenInput.value = "";
+      ignoreNextInputEvent = true;
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
+      }
+      return;
+    }
+
+    // 2. Tab Key (maps to space)
+    if (key === "Tab") {
+      e.preventDefault();
+      engine.handleChar(" ");
+      hiddenInput.value = "";
+      ignoreNextInputEvent = true;
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
+      }
+      return;
+    }
+
+    // 3. Enter Key (maps to newline in code mode)
+    if (key === "Enter") {
+      e.preventDefault();
+      engine.handleChar("\n");
+      hiddenInput.value = "";
+      ignoreNextInputEvent = true;
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
+      }
+      return;
+    }
+
+    // 4. Desktop Hardware Keyboards: e.key is single printable char and not Unidentified
+    if (key && key.length === 1 && key !== "Unidentified" && key !== "Process") {
+      e.preventDefault();
+      engine.handleChar(key);
+      hiddenInput.value = "";
+      ignoreNextInputEvent = true;
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
+      }
+    } else {
+      // Mobile touch keyboards send e.key = "Unidentified"
+      // DO NOT call e.preventDefault(), so the input event fires and receives the typed char!
+      ignoreNextInputEvent = false;
+    }
+  });
+
+  // Mobile Soft Keyboards (Gboard, iOS, Samsung Keyboard) & Composition
+  hiddenInput.addEventListener("beforeinput", (e) => {
+    if (!engine || engine.status === "complete") return;
+
+    if (e.inputType === "deleteContentBackward") {
+      e.preventDefault();
+      engine.handleBackspace();
+      hiddenInput.value = "";
+      ignoreNextInputEvent = true;
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
       }
     }
+  });
 
-    engine.handleInput(e);
+  hiddenInput.addEventListener("input", () => {
+    if (!engine || engine.status === "complete") return;
 
-    if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
-      startTimer();
+    if (ignoreNextInputEvent) {
+      ignoreNextInputEvent = false;
+      hiddenInput.value = "";
+      return;
+    }
+
+    const val = hiddenInput.value;
+    if (val) {
+      for (let i = 0; i < val.length; i++) {
+        engine.handleChar(val[i]);
+      }
+      hiddenInput.value = "";
+      if (engine.status === "active" && timeLimit > 0 && timerIntervalId === null) {
+        startTimer();
+      }
     }
   });
 

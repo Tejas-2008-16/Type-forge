@@ -73,66 +73,22 @@ export class TypingEngine {
   }
 
   /**
-   * Primary Keystroke Processor — High-speed, synchronous execution (< 1ms target)
+   * Primary Keystroke Processor — Single Character Handler
    */
-  handleInput(event) {
+  handleChar(inputChar) {
     if (this.status === "complete") return;
 
-    // Prevent tab scrolling or browser defaults for typing control keys
-    if (event.key === "Tab" || event.key === " ") {
-      event.preventDefault();
-    }
-
-    // Auto start on first valid typing keypress
-    if (this.status === "idle" && !this._isControlKey(event.key)) {
+    if (this.status === "idle") {
       this.start();
     }
 
-    const key = event.key;
-
-    // 1. Handle Backspace
-    if (key === "Backspace") {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-        const prevChar = this.characters[this.currentIndex];
-        
-        if (prevChar.status === "correct") {
-          this.correctCount = Math.max(0, this.correctCount - 1);
-        } else if (prevChar.status === "incorrect") {
-          this.incorrectCount = Math.max(0, this.incorrectCount - 1);
-        }
-
-        prevChar.status = "untyped";
-        prevChar.typedChar = null;
-        prevChar.timestamp = null;
-        this.backspaceCount++;
-
-        this._emitCharEvent(prevChar, "backspace");
-      }
-      return;
-    }
-
-    // Ignore non-printable modifier keys (Ctrl, Shift, Alt, Meta, CapsLock, F1-F12, etc.)
-    if (this._isControlKey(key)) return;
-
-    // Prevent typing beyond challenge text length
     if (this.currentIndex >= this.characters.length) return;
 
     const expectedChar = this.characters[this.currentIndex].char;
-    let actualInputChar = key;
-
-    // 2. Tab & Enter key mapping for code mode
-    if (key === "Tab") {
-      actualInputChar = " "; // Match space indentation
-    } else if (key === "Enter") {
-      actualInputChar = "\n";
-    }
-
-    // 3. Compare Input Keystroke
-    const isMatch = actualInputChar === expectedChar;
+    const isMatch = inputChar === expectedChar;
     const currentCharObj = this.characters[this.currentIndex];
 
-    currentCharObj.typedChar = actualInputChar;
+    currentCharObj.typedChar = inputChar;
     currentCharObj.timestamp = performance.now();
     this.totalTyped++;
 
@@ -149,14 +105,72 @@ export class TypingEngine {
 
     this._emitCharEvent(processedChar, isMatch ? "correct" : "incorrect");
 
-    // Check completion condition
     if (this.currentIndex >= this.characters.length) {
       this.stop();
     }
   }
 
+  /**
+   * Handle Backspace Key
+   */
+  handleBackspace() {
+    if (this.status === "complete") return;
+
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      const prevChar = this.characters[this.currentIndex];
+      
+      if (prevChar.status === "correct") {
+        this.correctCount = Math.max(0, this.correctCount - 1);
+      } else if (prevChar.status === "incorrect") {
+        this.incorrectCount = Math.max(0, this.incorrectCount - 1);
+      }
+
+      prevChar.status = "untyped";
+      prevChar.typedChar = null;
+      prevChar.timestamp = null;
+      this.backspaceCount++;
+
+      this._emitCharEvent(prevChar, "backspace");
+    }
+  }
+
+  /**
+   * Primary Keystroke Event Processor — Legacy & Desktop Keyboard handler
+   */
+  handleInput(event) {
+    if (this.status === "complete") return;
+
+    // Prevent tab scrolling or browser defaults for typing control keys
+    if (event.key === "Tab" || event.key === " ") {
+      event.preventDefault();
+    }
+
+    const key = event.key;
+
+    if (key === "Backspace") {
+      this.handleBackspace();
+      return;
+    }
+
+    // Ignore non-printable modifier keys & Unidentified mobile keys (handled via input event)
+    if (this._isControlKey(key)) return;
+
+    let actualInputChar = key;
+    if (key === "Tab") {
+      actualInputChar = " ";
+    } else if (key === "Enter") {
+      actualInputChar = "\n";
+    }
+
+    this.handleChar(actualInputChar);
+  }
+
   _isControlKey(key) {
     return (
+      !key ||
+      key === "Unidentified" ||
+      key === "Process" ||
       key === "Shift" ||
       key === "Control" ||
       key === "Alt" ||
